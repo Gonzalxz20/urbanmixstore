@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi Tienda Premium</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <div class="logo">Mi<span>Tienda</span></div>
+  <nav>
+    <a href="#catalogo">Catálogo</a>
+    <a href="#" onclick="filterCategory('Ropa'); return false;">Ropa</a>
+    <a href="#" onclick="filterCategory('Accesorios'); return false;">Accesorios</a>
+    <a href="#" onclick="filterCategory('Calzado'); return false;">Calzado</a>
+  </nav>
+</header>
+
+<section class="carousel-container">
+  <div class="carousel-track">
+    
+    <div class="carousel-slide active" style="background-image: linear-gradient(rgba(11,11,11,0.6), rgba(11,11,11,0.9)), url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=1600&q=80');">
+      <div class="carousel-content">
+        <p class="hero-tag">Nueva Temporada</p>
+        <h1>Estilo que <em>habla</em><br>por ti</h1>
+        <p>Descubre piezas únicas seleccionadas con el máximo cuidado para renovar tu outfit diario.</p>
+        <a href="#catalogo" class="carousel-btn-action">Explorar Colección</a>
+      </div>
+    </div>
+
+    <div class="carousel-slide" style="background-image: linear-gradient(rgba(11,11,11,0.6), rgba(11,11,11,0.9)), url('https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1600&q=80');">
+      <div class="carousel-content">
+        <p class="hero-tag">Edición Limitada</p>
+        <h1>Esencia <em>Minimalista</em></h1>
+        <p>Bolsos y accesorios diseñados bajo un concepto de exclusividad, elegancia y sobriedad.</p>
+        <a href="#" onclick="filterCategory('Bolsos'); document.getElementById('catalogo').scrollIntoView(); return false;" class="carousel-btn-action">Ver Bolsos</a>
+      </div>
+    </div>
+
+    <div class="carousel-slide" style="background-image: linear-gradient(rgba(11,11,11,0.6), rgba(11,11,11,0.9)), url('https://images.unsplash.com/photo-1509319117193-57bab727e09d?w=1600&q=80');">
+      <div class="carousel-content">
+        <p class="hero-tag">Descuentos Especiales</p>
+        <h1>Completa tu <em>Look</em></h1>
+        <p>Aprovecha las últimas unidades de calzado y accesorios antes de que se agoten.</p>
+        <a href="#" onclick="filterCategory('Calzado'); document.getElementById('catalogo').scrollIntoView(); return false;" class="carousel-btn-action">Ver Calzado</a>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="carousel-arrow prev" onclick="moveSlide(-1)">❮</button>
+  <button class="carousel-arrow next" onclick="moveSlide(1)">❯</button>
+
+  <div class="carousel-dots" id="carouselDots"></div>
+</section>
+
+<section class="catalog-section" id="catalogo">
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="¿Qué estás buscando? (ej. Blazer, Cartera...)" oninput="handleSearch()">
+    <span class="search-icon">🔍</span>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterCategory('Todos', this)">Todos <span class="count" id="count-Todos">0</span></button>
+    <button class="filter-btn" onclick="filterCategory('Ropa', this)">Ropa <span class="count" id="count-Ropa">0</span></button>
+    <button class="filter-btn" onclick="filterCategory('Accesorios', this)">Accesorios <span class="count" id="count-Accesorios">0</span></button>
+    <button class="filter-btn" onclick="filterCategory('Calzado', this)">Calzado <span class="count" id="count-Calzado">0</span></button>
+    <button class="filter-btn" onclick="filterCategory('Bolsos', this)">Bolsos <span class="count" id="count-Bolsos">0</span></button>
+  </div>
+</section>
+
+<div class="grid-wrap">
+  <div class="grid" id="productGrid"></div>
+  <div class="no-results" id="noResults">
+    <p>No se encontraron productos que coincidan con tu búsqueda.</p>
+  </div>
+</div>
+
+<div class="overlay" id="overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-img-container">
+      <img src="" alt="" id="modalImg" class="modal-img">
+    </div>
+    <div class="modal-body">
+      <button class="close-btn" onclick="closeModalDirect()">✕</button>
+      <p class="modal-cat" id="modalCat"></p>
+      <h2 class="modal-name" id="modalName"></h2>
+      <p class="modal-price" id="modalPrice"></p>
+      <hr class="modal-divider">
+      <div>
+        <p class="modal-label">Descripción</p>
+        <p class="modal-text" id="modalDesc"></p>
+      </div>
+      <div class="modal-details" id="modalDetails"></div>
+      <hr class="modal-divider">
+      <div class="avail">
+        <span class="avail-dot"></span>
+        <span class="avail-text">Disponible — Consulta inmediata</span>
+      </div>
+      <a id="messengerLink" class="messenger-btn" href="#" target="_blank" rel="noopener">
+        <svg class="messenger-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 2C6.477 2 2 6.145 2 11.243c0 3.02 1.516 5.71 3.879 7.465V22l3.54-1.942a10.3 10.3 0 0 0 2.581.328c5.523 0 10-4.145 10-9.243S17.523 2 12 2zm1.05 12.45-2.55-2.717-4.977 2.717 5.477-5.81 2.613 2.717 4.915-2.717-5.478 5.81z"/>
+        </svg>
+        ¿Sigue disponible? Consultar por Messenger
+      </a>
+      <p style="font-size:0.75rem; color:var(--text2); text-align:center; margin-top:-0.3rem;">
+        Te responderemos a la brevedad
+      </p>
+    </div>
+  </div>
+</div>
+
+<button class="scroll-top" id="scrollTopBtn" onclick="scrollToTop()">↑</button>
+
+<footer>
+  <p>© 2026 MiTienda — Todos los derechos reservados</p>
+  <p style="margin-top:0.4rem;">Para consultas directas escrébenos por <a href="#" style="color:var(--accent); text-decoration:none; font-weight: 500;">Messenger</a></p>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
